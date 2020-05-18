@@ -8,8 +8,10 @@ vsphere_datacenter = "SanJose"
 vsphere_cluster = "Physical"
 vsphere_datastore = "NFS-3"
 vsphere_folder = "/Terraform"
-vsphere_network = "VSS-Trunk"
+# MGMT network to connect first network adapter of the VM
 vsphere_network_mgmt = "mgmt-vss"
+# Network to connect rest of the adapters. By default it will be trunked port group
+vsphere_network = "VSS-Trunk"
 
 # Guest
 guest_template = "esxi-nested"
