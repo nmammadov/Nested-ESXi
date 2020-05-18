@@ -57,3 +57,32 @@ variable "guest_user" {
 variable "guest_password" {
   description = "Password for guest user."
 }
+
+variable "guest_disk0_size" {
+  description = "Size of first disk to be added."   
+}
+variable "guest_disk1_size" {
+  description = "Size of second disk to be added. Needed for VSAN"   
+}
+variable "guest_disk2_size" {
+  description = "Size of third disk to be added. Needed for VSAN"   
+}
+
+variable "guest_dns" {
+  description = "DNS server for the guest."
+}
+variable "guest_ntp" {
+  description = "NTP server for the guest."  
+}
+variable "guest_domain" {
+  description = "Domain for the guest."  
+}
+variable "guest_start_ip" {
+  description = "Starting IP address for the guest vmk0 interface"  
+}
+variable "guest_netmask" {
+  description = "Netmask for the guest vmk0 interface"   
+}
+variable "guest_gateway" {
+  description = "Gateway for the guest vmk0 interface"   
+}
