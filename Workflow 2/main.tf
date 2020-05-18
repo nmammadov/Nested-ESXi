@@ -30,20 +30,19 @@ data "vsphere_network" "target_network_mgmt" {
   datacenter_id = data.vsphere_datacenter.target_dc.id
 }
 
+
 data "vsphere_virtual_machine" "source_template" {
   name          = var.guest_template
   datacenter_id = data.vsphere_datacenter.target_dc.id
 }
 
+# Indicate VM names and their index number. By default it will create 5 VMs 
 
-# Indicate name of VMs and their quantity. By default it will create 5 nested esxi hosts with names below
 variable "vm_names" {
 default = {
   "vesxi101" = 1
   "vesxi102" = 2
-  "vesxi103" = 3
-  "vesxi104" = 4
-  "vesxi105" = 5
+
 }
 
 }
@@ -63,13 +62,16 @@ resource "vsphere_virtual_machine" "vesxi" {
   wait_for_guest_ip_timeout = 35
   scsi_type = data.vsphere_virtual_machine.source_template.scsi_type
 
-  # By default it will add 4 interfaces on the host. 1st will be connected to mgmt network, three others will be trunked
-  
+
+  # First interface will be in MGMT port group
   network_interface {
     network_id   = data.vsphere_network.target_network_mgmt.id
     adapter_type = data.vsphere_virtual_machine.source_template.network_interface_types[0]
     
   }
+  
+  # Other 3 vmnics will be added in a Trunk port group
+
   network_interface {
     network_id   = data.vsphere_network.target_network.id
     adapter_type = data.vsphere_virtual_machine.source_template.network_interface_types[0]
@@ -85,21 +87,19 @@ resource "vsphere_virtual_machine" "vesxi" {
  
   disk {
     label            = "disk0"
-    size             = 40
+    size             = var.guest_disk0_size
     thin_provisioned = data.vsphere_virtual_machine.source_template.disks[0].thin_provisioned
   }
   
-  # Adding two more disks for VSAN
-  
   disk {
     label            = "disk1"
-    size             = 111
+    size             = var.guest_disk1_size
     thin_provisioned = data.vsphere_virtual_machine.source_template.disks[0].thin_provisioned
     unit_number      = 1
   }
   disk {
     label            = "disk2"
-    size             = 222
+    size             = var.guest_disk2_size
     thin_provisioned = data.vsphere_virtual_machine.source_template.disks[0].thin_provisioned
     unit_number      = 2
   }
@@ -110,14 +110,14 @@ resource "vsphere_virtual_machine" "vesxi" {
   
   }
 
- # Changing settings to make static IP address for vmk0, adding second nic to standard vSwitch0, adjusting NTP and DNS values.
+# Changing hostname and setting domain name  
   
 provisioner "remote-exec" {
-    inline = ["esxcli system hostname set -H=${each.key} -d=home.lab",
-    "esxcli network ip dns server add --server=192.168.156.11",
-    "echo server 192.168.156.11 > /etc/ntp.conf && /etc/init.d/ntpd start",
+    inline = ["esxcli system hostname set -H=${each.key} -d=${var.guest_domain}",
+    "esxcli network ip dns server add --server=${var.guest_dns}",
+    "echo server ${var.guest_ntp} > /etc/ntp.conf && /etc/init.d/ntpd start",
     "esxcli network vswitch standard uplink add --uplink-name=vmnic1 --vswitch-name=vSwitch0",
-    "esxcli network ip interface ipv4 set -i vmk0 -t static -g 172.23.10.252 -I 172.23.10.10${each.value} -N 255.255.255.0 ",
+    "esxcli network ip interface ipv4 set -i vmk0 -t static -g ${var.guest_gateway} -I ${var.guest_start_ip}${each.value} -N ${var.guest_netmask} ",
     ]
 }
 
@@ -126,7 +126,8 @@ connection  {
       password       = var.guest_password
       timeout = 15
       host  = self.guest_ip_addresses[0]
-    }
+    }  
+
    }
 
 
