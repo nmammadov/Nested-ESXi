@@ -31,7 +31,7 @@
       "ssh_timeout" : "{{user `ssh_timeout`}}" , 
 
       "iso_paths": [
-        "[{{user `vsphere_datastore`}}] /ISOs/VMware-VMvisor-Installer-7.0.0-15843807.x86_64.iso"
+        "[{{user `vsphere_datastore`}}] {{user `iso_file_path`}}"
       ],
 
       "boot_command": [
