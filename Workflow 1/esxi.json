@@ -6,7 +6,7 @@
       "vcenter_server": "{{user `vsphere_vcenter`}}",
       "username": "{{user `vsphere_username`}}",
       "password": "{{user `vsphere_password`}}",
-      "insecure_connection": "true",
+      "insecure_connection": true,
   
       "datacenter": "{{user `vsphere_datacenter`}}",
       "cluster": "{{user `vsphere_cluster`}}",
@@ -22,7 +22,7 @@
       "RAM": "{{user `vm_ram_size`}}",
       "disk_controller_type":  "{{user `vm_disk_controller`}}",
       "disk_size": "{{user `vm_disk_size`}}",
-      "disk_thin_provisioned": "true",
+      "disk_thin_provisioned": true,
       "network_card": "vmxnet3",
       
       "communicator" : "ssh", 
