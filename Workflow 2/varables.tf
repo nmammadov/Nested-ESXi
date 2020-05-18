@@ -33,7 +33,7 @@ variable "vsphere_network" {
 }
 
 variable "vsphere_network_mgmt" {
-  description = "Porgroup to which the virtual machine will be connected."
+  description = "Porgroup to which the virtual machine management will be connected."
 }
 
 
