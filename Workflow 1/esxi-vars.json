@@ -17,6 +17,7 @@
     "guest_username": "root",
     "guest_password": "VMware1!",
     "ssh_timeout": "15m",
-    "nfs_server_path" : "192.168.156.11/volume1/vmware/ks.cfg"
+    "nfs_server_path" : "192.168.156.11/volume1/vmware/ks.cfg",
+    "iso_file_path" : "/ISOs/VMware-VMvisor-Installer-7.0.0-15843807.x86_64.iso"
   }
   
