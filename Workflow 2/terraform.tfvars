@@ -1,6 +1,6 @@
 # Provider
 vsphere_user = "administrator@lab.home"
-vsphere_password = "Mikail06202015!"
+vsphere_password = "VMware1!VMware1!"
 vsphere_server = "vcsa01.home.lab"
 
 # Infrastructure
