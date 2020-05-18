@@ -37,7 +37,7 @@
       "boot_command": [
         "<enter>",
         "<SHIFT+O>",
-        " ks=nfs://192.168.156.11/volume1/vmware/ks.cfg",
+        " ks=nfs://{{user `nfs_server_path`}}",
         "<enter>" ,
         ""
       ]
