@@ -1,0 +1,21 @@
+{
+    "vsphere_vcenter": "vcsa01.home.lab",
+    "vsphere_username": "administrator@lab.home",
+    "vsphere_password": "Mikail06202015!",
+    "vsphere_datacenter": "SanJose",
+    "vsphere_cluster": "Physical",
+    "vsphere_datastore": "NFS-3",
+    "vsphere_template_folder": "Packer_VMs",
+    "vsphere_network": "VSS-Trunk",
+    "vm_name": "esxi-nested123",
+    "vm_hostname": "vesxi001",
+    "vm_guestos": "vmkernel7guest",
+    "vm_cpu_size": "8",
+    "vm_ram_size": "262144",
+    "vm_disk_controller": "pvscsi",
+    "vm_disk_size": "4096",
+    "guest_username": "root",
+    "guest_password": "VMware1!",
+    "ssh_timeout": "15m"
+  }
+  

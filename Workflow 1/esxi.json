@@ -1,0 +1,47 @@
+{
+    "builders": [
+    {
+      "type": "vsphere-iso",
+  
+      "vcenter_server": "{{user `vsphere_vcenter`}}",
+      "username": "{{user `vsphere_username`}}",
+      "password": "{{user `vsphere_password`}}",
+      "insecure_connection": "true",
+  
+      "datacenter": "{{user `vsphere_datacenter`}}",
+      "cluster": "{{user `vsphere_cluster`}}",
+      "folder": "{{user `vsphere_template_folder`}}",
+      "datastore": "{{user `vsphere_datastore`}}",
+      "network": "{{user `vsphere_network`}}",
+      "convert_to_template": "true",
+  
+      "vm_name": "{{user `vm_name`}}",
+      "guest_os_type": "{{user `vm_guestos`}}",
+  
+      "CPUs": "{{user `vm_cpu_size`}}",
+      "RAM": "{{user `vm_ram_size`}}",
+      "disk_controller_type":  "{{user `vm_disk_controller`}}",
+      "disk_size": "{{user `vm_disk_size`}}",
+      "disk_thin_provisioned": "true",
+      "network_card": "vmxnet3",
+      
+      "communicator" : "ssh", 
+      "ssh_username": "{{user `guest_username`}}",
+      "ssh_password": "{{user `guest_password`}}",
+      "ssh_timeout" : "{{user `ssh_timeout`}}" , 
+
+      "iso_paths": [
+        "[{{user `vsphere_datastore`}}] /ISOs/VMware-VMvisor-Installer-7.0.0-15843807.x86_64.iso"
+      ],
+
+      "boot_command": [
+        "<enter>",
+        "<SHIFT+O>",
+        " ks=nfs://192.168.156.11/volume1/vmware/ks.cfg",
+        "<enter>" ,
+        ""
+      ]
+    }
+]
+}
+  
