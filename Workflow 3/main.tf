@@ -46,10 +46,14 @@ variable "network_interfaces" {
     default = ["vmnic2","vmnic3"]
 }
 
+# Creating new datacenter using name defined in variables file.
+
 resource "vsphere_datacenter" "target_dc" {
   name = var.vsphere_datacenter
 }
 
+# This is Python script that will get ESXi hosts thumbprints.
+# Passing username,password and list of hosts to connect as variables. 
 
 data "external" "get_thumbprint" {
    program = ["python", "Esxi-connect.py"]
@@ -61,12 +65,17 @@ data "external" "get_thumbprint" {
   }
 }
 
+# Creating Cluster for Managemnt 
+# Note this depends on previous datacenter object to be created first.
 
 resource "vsphere_compute_cluster" "c1" {
   name            = var.mgmt_cluster
   datacenter_id   = vsphere_datacenter.target_dc.moid
   depends_on = [vsphere_datacenter.target_dc,]
 }
+
+# Creating Cluster for Compute 
+# Note this depends on previous datacenter object to be created first.
 
 resource "vsphere_compute_cluster" "c2" {
   name            = var.compute_cluster
@@ -75,6 +84,8 @@ resource "vsphere_compute_cluster" "c2" {
 
 }
 
+# Adding hosts to management cluster. By default two hosts will be added.
+# This depends on previously created Management cluster
 
 resource "vsphere_host" "h1" {
   for_each = var.host_names_mgmt
@@ -86,6 +97,9 @@ resource "vsphere_host" "h1" {
   depends_on = [vsphere_compute_cluster.c1]
 }
 
+# Adding hosts to compute cluster. By default three hosts will be added.
+# This depends on previously created Compute cluster
+
 resource "vsphere_host" "h2" {
   for_each = var.host_names_comp
   hostname = each.key
@@ -95,6 +109,8 @@ resource "vsphere_host" "h2" {
   cluster = vsphere_compute_cluster.c2.id
   depends_on = [vsphere_compute_cluster.c2]
 }
+
+# Creating latest version of Distributed Switch ,setting MTU. By default it inlcudes 2 uplinks and adds all five hosts
 
 
 resource "vsphere_distributed_virtual_switch" "dvs" {
@@ -134,6 +150,8 @@ resource "vsphere_distributed_virtual_switch" "dvs" {
 
 }
 
+# Creating distributed port groups
+
 resource "vsphere_distributed_port_group" "pg1" {
   for_each = var.pg
   name                            = each.key
@@ -141,6 +159,8 @@ resource "vsphere_distributed_port_group" "pg1" {
 
   vlan_id = each.value
 }
+
+# Creating trunk port group
 
 resource "vsphere_distributed_port_group" "pg2" {
   name                            = "dvs-trunk"
