@@ -36,19 +36,7 @@ data "vsphere_virtual_machine" "source_template" {
   datacenter_id = data.vsphere_datacenter.target_dc.id
 }
 
-# Indicate VM names and value of IP address last octet . By default it will create 5 VMs 
 
-variable "vm_names" {
-default = {
-  "vesxi101" = 101
-  "vesxi102" = 102
-  "vesxi103" = 103
-  "vesxi104" = 104
-  "vesxi105" = 105
-
-}
-
-}
 
 resource "vsphere_virtual_machine" "vesxi" {
   for_each = var.vm_names
