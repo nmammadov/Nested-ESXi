@@ -36,12 +36,15 @@ data "vsphere_virtual_machine" "source_template" {
   datacenter_id = data.vsphere_datacenter.target_dc.id
 }
 
-# Indicate VM names and their index number. By default it will create 5 VMs 
+# Indicate VM names and value of IP address last octet . By default it will create 5 VMs 
 
 variable "vm_names" {
 default = {
-  "vesxi101" = 1
-  "vesxi102" = 2
+  "vesxi101" = 101
+  "vesxi102" = 102
+  "vesxi103" = 103
+  "vesxi104" = 104
+  "vesxi105" = 105
 
 }
 
@@ -88,19 +91,19 @@ resource "vsphere_virtual_machine" "vesxi" {
   disk {
     label            = "disk0"
     size             = var.guest_disk0_size
-    thin_provisioned = data.vsphere_virtual_machine.source_template.disks[0].thin_provisioned
+    thin_provisioned = true
   }
   
   disk {
     label            = "disk1"
     size             = var.guest_disk1_size
-    thin_provisioned = data.vsphere_virtual_machine.source_template.disks[0].thin_provisioned
+    thin_provisioned = true
     unit_number      = 1
   }
   disk {
     label            = "disk2"
     size             = var.guest_disk2_size
-    thin_provisioned = data.vsphere_virtual_machine.source_template.disks[0].thin_provisioned
+    thin_provisioned = true
     unit_number      = 2
   }
 
@@ -110,8 +113,6 @@ resource "vsphere_virtual_machine" "vesxi" {
   
   }
 
-# Changing hostname and setting domain name  
-  
 provisioner "remote-exec" {
     inline = ["esxcli system hostname set -H=${each.key} -d=${var.guest_domain}",
     "esxcli network ip dns server add --server=${var.guest_dns}",
