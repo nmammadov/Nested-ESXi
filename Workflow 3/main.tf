@@ -7,6 +7,7 @@ provider "vsphere" {
 }
 
 # Indicate all hosts to be added to vCenter. FQDN or IP 
+
 variable "all_hosts" {
   default =["vesxi101.home.lab","vesxi102.home.lab","vesxi103.home.lab","vesxi104.home.lab","vesxi105.home.lab"]
 }
@@ -45,10 +46,14 @@ variable "network_interfaces" {
     default = ["vmnic2","vmnic3"]
 }
 
+resource "vsphere_datacenter" "target_dc" {
+  name = var.vsphere_datacenter
+}
 
 
-data "external" "abc" {
-  program = ["python", "Esxi-connect.py"]
+data "external" "get_thumbprint" {
+   program = ["python", "Esxi-connect.py"]
+
   query = {
     username = var.esxi_user
     password = var.esxi_password
@@ -56,18 +61,18 @@ data "external" "abc" {
   }
 }
 
-data "vsphere_datacenter" "target_dc" {
-  name = var.vsphere_datacenter
-}
 
 resource "vsphere_compute_cluster" "c1" {
   name            = var.mgmt_cluster
-  datacenter_id   = data.vsphere_datacenter.target_dc.id
+  datacenter_id   = vsphere_datacenter.target_dc.moid
+  depends_on = [vsphere_datacenter.target_dc,]
 }
 
 resource "vsphere_compute_cluster" "c2" {
   name            = var.compute_cluster
-  datacenter_id   = data.vsphere_datacenter.target_dc.id
+  datacenter_id   = vsphere_datacenter.target_dc.moid
+  depends_on = [vsphere_datacenter.target_dc,]
+
 }
 
 
@@ -76,7 +81,7 @@ resource "vsphere_host" "h1" {
   hostname = each.key
   username = var.esxi_user
   password = var.esxi_password
-  thumbprint = data.external.abc.result["${each.key}"]
+  thumbprint = data.external.get_thumbprint.result["${each.key}"]
   cluster = vsphere_compute_cluster.c1.id
   depends_on = [vsphere_compute_cluster.c1]
 }
@@ -86,7 +91,7 @@ resource "vsphere_host" "h2" {
   hostname = each.key
   username = var.esxi_user
   password = var.esxi_password
-  thumbprint = data.external.abc.result["${each.key}"]
+  thumbprint = data.external.get_thumbprint.result["${each.key}"]
   cluster = vsphere_compute_cluster.c2.id
   depends_on = [vsphere_compute_cluster.c2]
 }
@@ -94,9 +99,9 @@ resource "vsphere_host" "h2" {
 
 resource "vsphere_distributed_virtual_switch" "dvs" {
   name          = var.vds_name
-  datacenter_id = data.vsphere_datacenter.target_dc.id
+  datacenter_id = vsphere_datacenter.target_dc.moid
   max_mtu = var.vds_mtu
-  depends_on = [vsphere_host.h1,vsphere_host.h2]
+    depends_on = [vsphere_host.h1,vsphere_host.h2]
 
 
   uplinks         = ["uplink1", "uplink2"]
@@ -114,6 +119,7 @@ resource "vsphere_distributed_virtual_switch" "dvs" {
  host {
     host_system_id = vsphere_host.h2["vesxi103.home.lab"].id
     devices        = var.network_interfaces
+ }
 
  host {
     host_system_id = vsphere_host.h2["vesxi104.home.lab"].id
@@ -141,7 +147,7 @@ resource "vsphere_distributed_port_group" "pg2" {
   distributed_virtual_switch_uuid = vsphere_distributed_virtual_switch.dvs.id
 
   vlan_range {
-    min_vlan = 0
-    max_vlan = 4094
+    min_vlan = var.vlan_range_min
+    max_vlan = var.vlan_range_max
   }
 }
