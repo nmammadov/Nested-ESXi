@@ -4,7 +4,7 @@ vsphere_password = "VMware1!VMware1!"
 vsphere_server = "vc01.home.lab"
 
 # Infrastructure
-vsphere_datacenter = "DC-1"
+vsphere_datacenter = "DC-2"
 mgmt_cluster = "management"
 compute_cluster = "compute-cluster"
 esxi_user = "root"
