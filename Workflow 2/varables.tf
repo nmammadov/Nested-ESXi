@@ -5,7 +5,6 @@ variable "vsphere_server" {
 
 variable "vsphere_user" {
   description = "vSphere username"
-  default     = "administrator@vsphere.local"
 }
 
 variable "vsphere_password" {
@@ -38,17 +37,15 @@ variable "vsphere_network_mgmt" {
 
 
 variable "guest_template" {
-  description = "The source virtual machine or template to clone from."
+  description = "The source template to clone from."
 }
 
 variable "guest_vcpu" {
-  description = "The number of virtual processors to assign to this virtual machine. Default: 1."
-  default     = "1"
+  description = "Guest VM vCPU amount"
 }
 
 variable "guest_memory" {
-  description = "The size of the virtual machine's memory, in MB. Default: 1024 (1 GB)."
-  default     = "1024"
+  description = "Guest VM Memory size"
 }
 
 variable "guest_user" {
