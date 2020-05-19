@@ -1,0 +1,34 @@
+---
+  - name : Deploy NSX Manager OVA
+    vmware_deploy_ovf:
+        hostname: '{{ vcenter }}'
+        username: '{{ vcenter_user }}'
+        password: '{{ vcenter_password }}'
+        datacenter : '{{ vcenter_datacenter }}'
+        validate_certs: no
+        datastore : '{{ vcenter_datastore }}'
+        cluster: '{{ vcenter_cluster }}'
+        name : '{{ inventory_hostname_short }}'
+        disk_provisioning: thin
+        wait: false
+        networks: 
+          "Network 1": '{{ nsx_mgmt }}'
+        ovf: '{{ manager_ova }}'
+        wait_for_ip_address: false
+        inject_ovf_env: yes
+        properties:
+            DeploymentOption.value : "small"
+            nsx_passwd_0 : '{{ nsx_passwd_0 }}'
+            nsx_cli_passwd_0 : '{{ nsx_cli_passwd_0 }}'
+            nsx_cli_audit_passwd_0 : '{{ nsx_cli_audit_passwd_0 }}'
+            nsx_hostname : '{{ inventory_hostname }}'
+            nsx_gateway_0 : '{{ nsx_gateway_0 }}'
+            nsx_ip_0 : '{{ nsx_mgr_ip }}'
+            nsx_netmask_0 : '{{ nsx_netmask_0 }}'
+            nsx_dns1_0 : '{{ nsx_dns1_0 }}'
+            nsx_domain_0 : '{{ nsx_domain_0 }}'
+            nsx_ntp_0 : '{{ nsx_ntp_0 }}'
+            nsx_isSSHEnabled : '{{ nsx_isSSHEnabled }}'
+    delegate_to : localhost
+
+
