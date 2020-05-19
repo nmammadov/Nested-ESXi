@@ -17,7 +17,6 @@
         wait_for_ip_address: false
         inject_ovf_env: yes
         properties:
-            DeploymentOption.value : "small"
             nsx_passwd_0 : '{{ nsx_passwd_0 }}'
             nsx_cli_passwd_0 : '{{ nsx_cli_passwd_0 }}'
             nsx_cli_audit_passwd_0 : '{{ nsx_cli_audit_passwd_0 }}'
