@@ -6,46 +6,6 @@ provider "vsphere" {
   allow_unverified_ssl = true
 }
 
-# Indicate all hosts to be added to vCenter. FQDN or IP 
-
-variable "all_hosts" {
-  default =["vesxi101.home.lab","vesxi102.home.lab","vesxi103.home.lab","vesxi104.home.lab","vesxi105.home.lab"]
-}
-
-# Indicate hosts in MGMT cluster. FQDN or IP
-variable "host_names_mgmt" {
-default = {
-  "vesxi101.home.lab" = 1
-  "vesxi102.home.lab" = 2
-  }
-}
-
-# Indicate hosts in Compute cluster. FQDN or IP
-variable "host_names_comp" {
-default = {
-  "vesxi103.home.lab" = 3
-  "vesxi104.home.lab" = 4
-  "vesxi105.home.lab" = 5
-  }
-}
-
-# Indicate Distributed Port Group names and their respective VLAN IDs. 
-
-variable "pg" {
-  default = {
-   "dvs-mgmt" = 10
-   "dvs-vmotion" = 20
-   "dvs-vsan" = 25
-   "dvs-nsx-edge-uplink1" = 30
-   "dvs-nsx-edge-uplink2" = 40
-  }
-}
-
-# Indicate Network Interfaces of the hosts to be added to VDS . By default only vmnic2 & vmnic3 will be added.
-variable "network_interfaces" {
-    default = ["vmnic2","vmnic3"]
-}
-
 # Creating new datacenter using name defined in variables file.
 
 resource "vsphere_datacenter" "target_dc" {
