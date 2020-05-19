@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+#### DO NOT MODIFY THIS FILE #####
+
 import paramiko
 import time
 import re
@@ -11,8 +15,8 @@ aa = []
 bb = []
 # Dictionary to store values of thumbprint in format of key = ip address , value = thumbprint
 host_dict = {}
-# List of all hosts to connect to
 
+# Function to strip extra spaces from variables being passed by TF
 def strip_lines():
     return {a.strip() for a in sys.stdin}
 
@@ -20,6 +24,8 @@ lines = strip_lines()
 
 for line in lines:
     data = json.loads(line)
+
+# Extract variables value from TF
 
 user = data["username"]
 password = data["password"]
