@@ -11,4 +11,7 @@ esxi_user = "root"
 esxi_password = "VMware1!"
 vds_name = "MY-VDS7"
 vds_mtu = "9000"
+# VLAN Trunking ranges. By default it will include all VLANs
+vlan_range_min = "0"
+vlan_range_max = "4094"
 
