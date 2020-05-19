@@ -35,6 +35,18 @@ variable "vsphere_network_mgmt" {
   description = "Porgroup to which the virtual machine management will be connected."
 }
 
+# Indicate VM names and value of IP address last octet . By default it will create 5 VMs 
+
+variable "vm_names" {
+default = {
+  "vesxi101" = 101
+  "vesxi102" = 102
+  "vesxi103" = 103
+  "vesxi104" = 104
+  "vesxi105" = 105
+  }
+}
+
 
 variable "guest_template" {
   description = "The source template to clone from."
