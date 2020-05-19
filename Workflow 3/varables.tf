@@ -37,3 +37,9 @@ variable "vds_name" {
 variable "vds_mtu" {
   description = "VDS MTU"
 }
+variable "vlan_range_min" {
+  description = "VLAN Starting Range"
+}
+variable "vlan_range_max" {
+  description = "VLAN Ending Range"
+}
