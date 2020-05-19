@@ -26,7 +26,7 @@ guest_disk2_size = "222"
 guest_dns = "192.168.156.11"
 guest_ntp = "192.168.156.11"
 guest_domain = "home.lab"
-# Guest start_ip format is the following. If ip address needs to be 172.23.10.101, then make guest_ip = 172.23.10.10. Last character will be added by the script later.
-guest_start_ip = "172.23.10.10"
+# Guest_start_IP format includes first 3 octets of the address with "." .Last octet will be added in main program
+guest_start_ip = "172.23.10."
 guest_netmask = "255.255.255.0"
 guest_gateway = "172.23.10.252"
