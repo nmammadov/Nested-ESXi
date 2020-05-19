@@ -8,7 +8,7 @@ provider "vsphere" {
 
 # Indicate all hosts to be added to vCenter. FQDN or IP 
 variable "all_hosts" {
-  default =["vesxi101.home.lab","vesxi102.home.lab"]
+  default =["vesxi101.home.lab","vesxi102.home.lab","vesxi103.home.lab","vesxi104.home.lab","vesxi105.home.lab"]
 }
 
 # Indicate hosts in MGMT cluster. FQDN or IP
@@ -48,7 +48,7 @@ variable "network_interfaces" {
 
 
 data "external" "abc" {
-  program = ["python", "/Users/nmammadov/Playground/Terraform/Python/Esxi-connect.py"]
+  program = ["python", "Esxi-connect.py"]
   query = {
     username = var.esxi_user
     password = var.esxi_password
@@ -81,24 +81,22 @@ resource "vsphere_host" "h1" {
   depends_on = [vsphere_compute_cluster.c1]
 }
 
-#resource "vsphere_host" "h2" {
-#  for_each = var.host_names_comp
-#  hostname = each.key
-#  username = var.esxi_user
-#  password = var.esxi_password
-#  thumbprint = data.external.abc.result["${each.key}"]
-#  thumbprint = data.external.abc.result["172.23.10.10${each.value}"]
-#  cluster = vsphere_compute_cluster.c2.id
-#  depends_on = [vsphere_compute_cluster.c2]
-#}
+resource "vsphere_host" "h2" {
+  for_each = var.host_names_comp
+  hostname = each.key
+  username = var.esxi_user
+  password = var.esxi_password
+  thumbprint = data.external.abc.result["${each.key}"]
+  cluster = vsphere_compute_cluster.c2.id
+  depends_on = [vsphere_compute_cluster.c2]
+}
 
 
 resource "vsphere_distributed_virtual_switch" "dvs" {
   name          = var.vds_name
   datacenter_id = data.vsphere_datacenter.target_dc.id
   max_mtu = var.vds_mtu
-  depends_on = [vsphere_host.h1]
-  #depends_on = [vsphere_host.h1,vsphere_host.h2]
+  depends_on = [vsphere_host.h1,vsphere_host.h2]
 
 
   uplinks         = ["uplink1", "uplink2"]
@@ -113,20 +111,20 @@ resource "vsphere_distributed_virtual_switch" "dvs" {
     devices        = var.network_interfaces
   }
 
- #host {
- #   host_system_id = vsphere_host.h2["vesxi103.home.lab"].id
- #   devices        = var.network_interfaces
+ host {
+    host_system_id = vsphere_host.h2["vesxi103.home.lab"].id
+    devices        = var.network_interfaces
 
- #host {
- #   host_system_id = vsphere_host.h2["vesxi104.home.lab"].id
- #   devices        = var.network_interfaces
+ host {
+    host_system_id = vsphere_host.h2["vesxi104.home.lab"].id
+    devices        = var.network_interfaces
 
- #   }
+    }
 
- #host {
- #   host_system_id = vsphere_host.h2["vesxi105.home.lab"].id
- #   devices        = var.network_interfaces
- #     }
+ host {
+    host_system_id = vsphere_host.h2["vesxi105.home.lab"].id
+    devices        = var.network_interfaces
+      }
 
 }
 
