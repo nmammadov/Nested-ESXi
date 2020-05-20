@@ -4,7 +4,8 @@ Finally NSX-T Manager and two NSX-T Edges will be rolled out on a new infrastruc
 
 Workflows need to be executed in order starting with the first one.
 
-cd Workflow 1
+cd Workflow 1  
+
 Place ks.cfg file to NFS server and adjust esxi-vars file to reflect your environment.
 
 packer build -var-file=esxi-vars.json esxi.json
